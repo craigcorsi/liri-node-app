@@ -22,7 +22,7 @@ var liri_media = process.argv[3];
 
 
 
-// function for pretty-printing tweets received as an array from the Twitter npm package
+// pretty-print tweets received as an array from the Twitter npm package
 function printTweets(tweets) {
     console.log(" --- -- - LAST 20 TWEETS - -- --- ");
     var l = tweets.length;
@@ -39,7 +39,7 @@ function printTweets(tweets) {
     }
 }
 
-// function for pretty-printing song into received from the Spotify npm package
+// pretty-print song info received from the Spotify npm package
 
 function printTrackInfo(track) {
 
@@ -59,7 +59,36 @@ function printTrackInfo(track) {
 }
 
 
+// format movie title for OMDB API query
+function formatMovieTitle(media) {
+    media = media.toLowerCase().split(' ');
+    var query = '';
+    for (var i = 0; i < media.length; i++) {
+        if (i > 0) {
+            query += '+';
+        }
+        query += media[i];
+    }
+    return query;
+}
 
+// pretty-print movie info received from the OMDB API
+
+function printMovieInfo(movie) {
+    console.log(movie);
+    console.log(' /------------------------------------------------------------------------\\');
+    console.log('|    ' + movie['Title'] + ' (' + movie['Year'] + ')');
+    console.log('|  starring ' + movie['Actors']);
+    console.log('|    Language(s): ' + movie['Language']);
+    console.log('|    Produced in ' + movie['Country']);
+    console.log('|      Ratings:');
+    for (var i = 0; i < movie['Ratings'].length; i++) {
+        var rating = movie['Ratings'][i];
+        console.log('|        ' + rating['Source'] + ": " + rating['Value']);
+    }
+    console.log('|  Plot: ' + movie['Plot']);
+    console.log(' \\------------------------------------------------------------------------/');
+}
 
 
 
@@ -99,7 +128,13 @@ var liri_run = {
         });
     },
     'movie-this': function (media) {
-        console.log("This is a good movie.");
+        var query = formatMovieTitle(media);
+        request("http://www.omdbapi.com/?t=" + query + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
+            if (!error && response.statusCode === 200) {
+                var movie = JSON.parse(body);
+                printMovieInfo(movie);
+            }
+        });
     },
     'do-what-it-says': function (media) {
         console.log("The contents of the .txt file are cool.");
