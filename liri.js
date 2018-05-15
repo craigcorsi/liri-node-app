@@ -68,6 +68,7 @@ function printTrackInfo(track) {
 
 // format movie title for OMDB API query
 function formatMovieTitle(media) {
+    //media = media.replace(/[^0-9a-z]/gi, '');
     media = media.toLowerCase().split(' ');
     var query = '';
     for (var i = 0; i < media.length; i++) {
@@ -136,6 +137,9 @@ var liri_run = {
         });
     },
     'movie-this': function (media) {
+        if (media == undefined) {
+            media = "Mr Nobody";
+        }
         var query = formatMovieTitle(media);
         request("http://www.omdbapi.com/?t=" + query + "&y=&plot=short&apikey=trilogy", function (error, response, body) {
             if (!error && response.statusCode === 200) {
