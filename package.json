@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/craigcorsi/liri-node-app#readme",
   "dependencies": {
+    "deep-extend": "^0.5.1",
     "dotenv": "^5.0.1",
     "fs": "0.0.1-security",
     "node-spotify-api": "^1.0.7",
